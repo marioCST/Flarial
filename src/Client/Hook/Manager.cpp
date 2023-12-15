@@ -11,6 +11,7 @@
 #include "Hooks/Visual/RenderActor.hpp"
 #include "Hooks/Game/getViewPerspective.hpp"
 #include "../Client.hpp"
+#include "Hooks/Visual/FontDrawTransformedHook.hpp"
 #include "Hooks/Visual/HurtColorHook.hpp"
 #include "Hooks/Visual/DimensionFogColorHook.hpp"
 #include "Hooks/Visual/OverworldFogColorHook.hpp"
@@ -52,6 +53,7 @@ void HookManager::initialize()
     hooks.push_back(new ActorBaseTick());
     hooks.push_back(new OnSuspendHook());
     hooks.push_back(new getGammaHook());
+    hooks.push_back(new FontDrawTransformedHook());
     hooks.push_back(new HurtColorHook());
     hooks.push_back(new DimensionFogColorHook());
     hooks.push_back(new OverworldFogColorHook());
