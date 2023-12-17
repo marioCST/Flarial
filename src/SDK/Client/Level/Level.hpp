@@ -28,13 +28,16 @@ public:
 };
 
 class Level {
+    using troll = std::unordered_map<mcUUID, PlayerListEntry>;
+
 public:
-    char pad_0000[0x1EA8]; //0x0000
-    std::unordered_map<mcUUID, PlayerListEntry> playermap; //0x1EA8
+    troll& getPlayerMap() {
+        return direct_access<troll>(this, 0x1EA8);
+    }
 
 	std::vector<Actor*> getRuntimeActorList() {
-		using Level_getRuntimeActorListFunc = std::vector<Actor*>(__fastcall*)(Level*);
-		static Level_getRuntimeActorListFunc Level_getRuntimeActorList = reinterpret_cast<Level_getRuntimeActorListFunc>(Memory::findSig("40 53 48 83 EC 30 48 81 C1 D8 1C 00 00"));
-		return Level_getRuntimeActorList(this);
+        static uintptr_t sig = Memory::findSig("40 53 48 83 EC 30 48 81 C1 D8 1C 00 00");
+        static auto getRuntimeActorList= *(decltype(&Level::getRuntimeActorList)*)&sig;
+        return (this->*getRuntimeActorList)();
 	}
 };
