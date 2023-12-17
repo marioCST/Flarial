@@ -4,6 +4,8 @@
 
 #include "../../../Utils/Utils.hpp"
 
+// Original made by og Horion devs, translated to glm stuff by Intop, NOT skidded from continued
+
 struct Matrix {
 public:
 	glm::mat4x4 matrix;
