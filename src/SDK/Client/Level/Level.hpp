@@ -19,6 +19,7 @@ class Level {
     using troll = std::unordered_map<mcUUID, PlayerListEntry>;
 
 public:
-    char pad_0000[0x1EA8]; //0x0000
-    std::unordered_map<mcUUID, PlayerListEntry> playermap; //0x1EA8
+    troll& getPlayerMap() {
+        return direct_access<troll>(this, 0x1EA8);
+    }
 };

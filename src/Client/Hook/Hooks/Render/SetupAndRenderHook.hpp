@@ -168,10 +168,6 @@ private:
 			Memory::hookFunc((void*)VTable[7], (void*)DrawImageDetour, (void**)&__o__DrawImage, "DrawImage");
 		}
 
-		DrawUtils::setCtx(muirc, SDK::clientInstance->guiData);
-
-		func_original(pScreenView, muirc);
-
 		SetupAndRenderEvent e;
 		e.muirc = muirc;
 
