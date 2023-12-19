@@ -113,27 +113,6 @@ private:
 
 		std::string layer = SDK::screenView->VisualTree->root->LayerName;
 
-		static bool shouldRender;
-		static std::string currentScreenName;
-		shouldRender = false;
-
-		if (!shouldRender) {
-			shouldRender = (layer == "debug_screen");
-			if (!shouldRender)
-				currentScreenName = layer;
-		}
-
-		if (!shouldRender) {
-			shouldRender = (currentScreenName == "hud_screen" || currentScreenName == "start_screen");
-		}
-
-		DrawUtils::setCtx(muirc, SDK::clientInstance->guiData);
-
-		if (!shouldRender) {
-			func_original(pScreenView, muirc);
-			return;
-		}
-
 		if (layer != "debug_screen" && layer != "toast_screen") {
 			if (ModuleManager::getModule("Zoom") != nullptr && ModuleManager::getModule("Zoom")->settings.getSettingByName<bool>("enabled")->value) {
 				bool mask = false;
@@ -168,8 +147,6 @@ private:
             }
 		}
 
-		func_original(pScreenView, muirc);
-
 		auto VTable = *(uintptr_t**)muirc;
 
 		if (func_originalText == nullptr) {
@@ -190,6 +167,10 @@ private:
 		if (__o__DrawImage == nullptr) {
 			Memory::hookFunc((void*)VTable[7], (void*)DrawImageDetour, (void**)&__o__DrawImage, "DrawImage");
 		}
+
+		DrawUtils::setCtx(muirc, SDK::clientInstance->guiData);
+
+		func_original(pScreenView, muirc);
 
 		SetupAndRenderEvent e;
 		e.muirc = muirc;
