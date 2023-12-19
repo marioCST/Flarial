@@ -55,7 +55,6 @@
 #include "Modules/Animations/Animations.hpp"
 #include "Modules/DVD Screen/dvd.hpp"
 #include "Modules/BlockOutline/BlockOutline.hpp"
-#include "Modules/Hitbox/Hitbox.hpp"
 #include <algorithm>
 
 bool compareNames( Module*& obj1,  Module*& obj2) {
@@ -116,7 +115,6 @@ void ModuleManager::initialize()
     modules.push_back(new Animations());
     modules.push_back(new DVD());
     modules.push_back(new BlockOutline());
-    modules.push_back(new Hitbox());
 
     std::sort(modules.begin(), modules.end(), compareNames);
 

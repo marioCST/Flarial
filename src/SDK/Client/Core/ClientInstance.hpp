@@ -10,8 +10,7 @@
 #include "Minecraft.hpp"
 #include "../Render/GLMatrix.hpp"
 #include "../Level/LevelRender/LevelRender.hpp"
-#include "Camera.hpp"
-#include "ClientHMDState.hpp"
+
 
 class ClientInstance {
 public:
@@ -25,9 +24,7 @@ public:
 
     BUILD_ACCESS(this, MinecraftGame*, mcgame, 0x0C8);
     BUILD_ACCESS(this, GuiData*, guiData, 0x560);
-    BUILD_ACCESS(this, Camera, camera, 0x270);
     BUILD_ACCESS(this, GLMatrix, Matrix1, 0x0330);
-    BUILD_ACCESS(this, ClientHMDState, HMDState, 0x5B0);
 
     LocalPlayer* getLocalPlayer();
     BlockSource* getBlockSource();
@@ -57,9 +54,5 @@ public:
     LoopbackPacketSender* getPacketSender()
     {
         return *reinterpret_cast<LoopbackPacketSender**>((uintptr_t)this + 0xF0);
-    }
-
-    Matrix const& getProjectionMatrix() {
-        return this->HMDState.lastLevelProjMatrix;
     }
 };
