@@ -10,6 +10,7 @@
 #include "src/Client/Module/Modules/Nick/NickListener.hpp"
 #include <kiero.h>
 #include <wininet.h>
+#include "src/Client/Module/Modules/Misc/DiscordRPC/DiscordRPCListener.hpp"
 
 
 std::chrono::steady_clock::time_point lastBeatTime;
@@ -34,21 +35,41 @@ DWORD WINAPI init(HMODULE real)
 
     Client::initialize();
     Logger::info("[Client] Initializing");
-    /*
+    
+
     std::thread statusThread([]() {
         while (true) {
 
             auto now = std::chrono::steady_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastBeatTime);
 
-            if(!Client::disable) {
-                if(SDK::hasInstanced && SDK::clientInstance != nullptr) {
+            if (!Client::disable) {
+                if (SDK::hasInstanced && SDK::clientInstance != nullptr) {
                     if (SDK::clientInstance->getLocalPlayer() != nullptr) {
-                        if(elapsed >= std::chrono::seconds(60)) {
+                        if (elapsed >= std::chrono::seconds(60)) {
                             ModuleManager::onlineUsers.clear();
+                            ModuleManager::onlineDevs.clear();
+                            ModuleManager::onlinePluses.clear();
+                            ModuleManager::onlineStaff.clear();
+                            ModuleManager::onlineCommites.clear();
                             std::string name = SDK::clientInstance->getLocalPlayer()->playerName;
                             ModuleManager::onlineUsers.push_back(Utils::removeColorCodes(name));
-                            std::string pp = DownloadString("https://api.flarial.net/users");
+
+
+                            std::string ipToSend;
+
+
+                            auto module = ModuleManager::getModule("Nick");
+
+                            if (SDK::clientInstance != nullptr)
+                                if (SDK::clientInstance->getLocalPlayer() != nullptr)
+                                    if (module->isEnabled()) {
+                                        name = Utils::removeNonAlphanumeric(Utils::removeColorCodes(NickListener::original));
+                                    }
+                            Logger::info(DownloadString("http://de2.bot-hosting.net:20358/heartbeat/" + Utils::removeColorCodes(name)));
+                            std::string pp = DownloadString("http://de2.bot-hosting.net:20358/users");
+                            Logger::info(pp);
+                            
 
                             json playersDict = json::parse(pp);
 
@@ -59,34 +80,36 @@ DWORD WINAPI init(HMODULE real)
 
                                 std::time_t unixTimestamp = player.value()["lastbeat"];
                                 std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(unixTimestamp);
- 
-                                ModuleManager::onlineUsers.push_back(Utils::removeNonAlphanumeric(player.key()));
-                               
+
+                                std::string icon = player.value()["icon"];
+                                if (icon == "regular") {
+
+                                    ModuleManager::onlineUsers.push_back(Utils::removeNonAlphanumeric(player.key()));
+                                }
+                                if (icon == "dev") {
+
+                                    ModuleManager::onlineDevs.push_back(Utils::removeNonAlphanumeric(player.key()));
+                                }
+                                if (icon == "commiter") {
+
+                                    ModuleManager::onlineCommites.push_back(Utils::removeNonAlphanumeric(player.key()));
+                                }
+                                if (icon == "plus") {
+
+                                    ModuleManager::onlinePluses.push_back(Utils::removeNonAlphanumeric(player.key()));
+                                }
+                                if (icon == "staff") {
+
+                                    ModuleManager::onlineStaff.push_back(Utils::removeNonAlphanumeric(player.key()));
+                                }
+
                                 //std::cout << Utils::removeNonAlphanumeric(player.key()) << std::endl;
-                      
+
                             }
 
-                            std::string ipToSend;
-
-                            if (!Client::settings.getSettingByName<bool>("anonymousApi")->value) {
-                                if (RaknetTickHook::towriteip.find("none") != std::string::npos) ipToSend = "in.singleplayer";
-                                else if (!RaknetTickHook::towriteip.empty()) ipToSend = RaknetTickHook::towriteip;
-                                else ipToSend = "in.singleplayer";
-                            } else ipToSend = "is.anonymous";
-
-                            auto module = ModuleManager::getModule("Nick");
-
-                            if(SDK::clientInstance != nullptr)
-                            if(SDK::clientInstance->getLocalPlayer() != nullptr)
-                            if (module->isEnabled()) {
-                                name = Utils::removeNonAlphanumeric(Utils::removeColorCodes(NickListener::original));
-                            }
                             // send thing
-                            std::cout << DownloadString(std::format("https://api.flarial.net/heartbeat/{}/{}",Utils::removeColorCodes(name),ipToSend))
-
-                            + " " + std::format("https://api.flarial.net/heartbeat/{}/{}",
-                              Utils::removeColorCodes(name),
-                                ipToSend) << std::endl;
+                          
+                            
 
                             lastBeatTime = now;
                         }
@@ -94,11 +117,12 @@ DWORD WINAPI init(HMODULE real)
                 }
                 Sleep(60);
 
-            } else break;
+            }
+            else break;
         }
-    });
+        });
     statusThread.detach();
-    */
+    
 
     while (true) {
         if (Client::disable) {
