@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Manager.hpp"
 #include "../Events/EventHandler.hpp"
@@ -59,6 +59,8 @@
 #include "Modules/NoHurtCam/NoHurtCam.hpp"
 #include "Modules/CommandHotkey/CommandHotkey.hpp"
 #include "Modules/Misc/DiscordRPC/DiscordRPCListener.hpp"
+#include "Modules/Overlay/OverlayModule.hpp"
+#include "Modules/AutoRQ/AutoRQ.hpp"
 #include <algorithm>
 
 namespace ModuleManager {
@@ -138,6 +140,8 @@ void ModuleManager::initialize() {
     ModuleManager::addModule(new CommandHotkey());
     ModuleManager::addModule(new NoHurtCam());
     ModuleManager::addModule(new InventoryHUD());
+    //ModuleManager::addModule(new OverlayModule());
+    ModuleManager::addModule(new AutoRQ());
     //ModuleManager::addModule(new MovableChat());
     //ModuleManager::addModule(new CompactChat());
 
