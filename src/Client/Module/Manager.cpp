@@ -64,6 +64,10 @@
 namespace ModuleManager {
     std::unordered_map<size_t, Module*> moduleMap;
     std::vector<std::string> onlineUsers;
+    std::vector<std::string> onlineDevs;
+    std::vector<std::string> onlineCommites;
+    std::vector<std::string> onlinePluses;
+    std::vector<std::string> onlineStaff;
 }
 
 void ModuleManager::addModule(Module* module) {
