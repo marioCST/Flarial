@@ -17,10 +17,10 @@ class BaseActorRendererRenderTextHook : public Hook {
 private:
 
     static void drawLogo(ScreenContext* screenContext, const Vec3<float>& cameraPos, const Vec3<float>& cameraTargetPos, const std::string& nameTag, const Vec3<float>& tagPos, Font* font) {
-        static bool doRender = true; // This bool exists because this function would render the logo on every nametag without exceptions. NEVER PUSH THIS SET TO TRUE UNLESS PROPER FILTERING IS IMPLEMENTED. In case of filter implementation, remove the bool entirely
+        std::string clearedName = Utils::removeNonAlphanumeric(Utils::removeColorCodes(nameTag));
+        if (clearedName.empty()) clearedName = Utils::removeColorCodes(nameTag); // nametag might contain some unclearable stuff
 
-        if (!doRender)
-            return;
+        if(!contains(Client::onlinePlayers, clearedName)) return;
 
         if (MaterialUtils::getUITextured() == nullptr)
             MaterialUtils::update();
@@ -42,15 +42,17 @@ private:
         matrix = translate(matrix, {pos.x, pos.y, pos.z});
         matrix = rotate(matrix, glm::radians(yaw), {0.f, 1.f, 0.f});
         matrix = rotate(matrix, glm::radians(pitch), {1.f, 0.f, 0.f});
-        matrix = scale(matrix, {-0.026666669f, -0.026666669f, 0.026666669f});
 
-        const ResourceLocation loc(Utils::getRoamingPath() + R"(\Flarial\assets\logo.png)", true); // The logo is the normal transparent Flarial logo, 128x128
+        const auto mScale = 0.026666669f; // 0.16f
+        matrix = scale(matrix, {mScale * -1, mScale * -1, mScale});
+
+        const ResourceLocation loc(Utils::getRoamingPath() + R"(\Flarial\assets\red-logo.png)", true); // The logo is the normal transparent Flarial logo, 128x128
         const TexturePtr ptr = SDK::clientInstance->getMinecraftGame()->textureGroup->getTexture(loc, false);
 
         const float fontHeight = font->getLineHeight();
         float x;
-        const float size = fontHeight * 1.5f;
-        const float y = -(fontHeight / 2.f);
+        const float size = fontHeight;
+        const float y = -1.f;
 
         if (std::ranges::find(nameTag.begin(), nameTag.end(), '\n') != nameTag.end()) {
             const auto split = Utils::splitString(nameTag, '\n');
@@ -99,19 +101,13 @@ private:
     }
 
     static void BaseActorRenderer_renderTextCallback(ScreenContext* screenContext, ViewRenderData* viewData, NameTagRenderObject* tagData, Font* font, float size) {
-        if(contains(Client::allPlayers, Utils::removeNonAlphanumeric(Utils::removeColorCodes(tagData->nameTag))))
         drawLogo(screenContext, viewData->cameraPos, viewData->cameraTargetPos, tagData->nameTag, tagData->pos, font);
-
 
         funcOriginal(screenContext, viewData, tagData, font, size);
     }
 
     static void BaseActorRenderer_renderTextCallback40(ScreenContext* screenContext, ViewRenderData* viewData, NameTagRenderObject* tagData, Font* font, void* mesh) {
-
-        std::cout << Utils::removeNonAlphanumeric(Utils::removeColorCodes(tagData->nameTag)) << std::endl;
-        if(contains(Client::allPlayers, Utils::removeNonAlphanumeric(Utils::removeColorCodes(tagData->nameTag))))
         drawLogo(screenContext, viewData->cameraPos, viewData->cameraTargetPos, tagData->nameTag, tagData->pos, font);
-
 
         funcOriginal40(screenContext, viewData, tagData, font, mesh);
     }
