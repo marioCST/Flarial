@@ -99,8 +99,6 @@ private:
     }
 
     static void BaseActorRenderer_renderTextCallback(ScreenContext* screenContext, ViewRenderData* viewData, NameTagRenderObject* tagData, Font* font, float size) {
-
-        std::cout << Utils::removeNonAlphanumeric(Utils::removeColorCodes(tagData->nameTag)) << std::endl;
         if(contains(Client::allPlayers, Utils::removeNonAlphanumeric(Utils::removeColorCodes(tagData->nameTag))))
         drawLogo(screenContext, viewData->cameraPos, viewData->cameraTargetPos, tagData->nameTag, tagData->pos, font);
 
