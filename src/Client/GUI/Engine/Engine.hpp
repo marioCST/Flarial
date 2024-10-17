@@ -281,6 +281,8 @@ namespace FlarialGUI {
 
     void LoadImageFromResource(int resourceId, ID2D1Bitmap **bitmap, LPCTSTR type = "PNG");
 
+    void ExtractImageResource(int resourceId, std::string fileName, LPCTSTR type);
+
     void LoadFont(int resourceId);
 
     void RoundedRectWithImageAndText(int index, float x, float y, const float width, const float height,

@@ -335,14 +335,14 @@ public:
                         i++;
                         // std::string name = Utils::removeNonAlphanumeric(Utils::removeColorCodes(pair.second.name));
                         std::string name = Utils::removeColorCodes(pair.second.name);
+
                         if (name.empty()) continue;
 
+                        std::string clearedName = Utils::removeNonAlphanumeric(Utils::removeColorCodes(name));
+                        if (clearedName.empty()) clearedName = Utils::removeColorCodes(name);
 
-                        auto it = std::find(ModuleManager::onlineUsers.begin(), ModuleManager::onlineUsers.end(), name);
-                        auto it2 = std::find(ModuleManager::onlineDevs.begin(), ModuleManager::onlineDevs.end(), name);
-                        auto it3 = std::find(ModuleManager::onlineCommites.begin(), ModuleManager::onlineCommites.end(), name);
-                        auto it4 = std::find(ModuleManager::onlinePluses.begin(), ModuleManager::onlinePluses.end(), name);
-                        auto it5 = std::find(ModuleManager::onlineStaff.begin(), ModuleManager::onlineStaff.end(), name);
+
+                        auto it = std::find(Client::onlinePlayers.begin(), Client::onlinePlayers.end(), clearedName);
 
                         // Check if the string was found
 
@@ -356,71 +356,24 @@ public:
 
                         float xx = 0;
 
-                        /*
+                        if (it != Client::onlinePlayers.end()) {
+                            static float p1 = 0.25;
+                            static float p2 = 0.28;
+                            static float p3 = 1;
+                            static float p4 = 1.1;
 
-                        if (it != ModuleManager::onlineUsers.end()) {
-                            FlarialGUI::image(R"(\Flarial\assets\logo.png)",
-                                              D2D1::RectF(fakex + Constraints::SpacingConstraint(0.2, keycardSize),
+                            FlarialGUI::image(IDR_RED_LOGO_PNG,
+                                              D2D1::RectF(fakex + Constraints::SpacingConstraint(p1, keycardSize),
                                                           realcenter.y +
-                                                          Constraints::SpacingConstraint(0.12, keycardSize),
-                                                          fakex + Constraints::SpacingConstraint(1.1, keycardSize),
+                                                          Constraints::SpacingConstraint(p2, keycardSize),
+                                                          fakex + Constraints::SpacingConstraint(p3, keycardSize),
                                                           realcenter.y +
-                                                          Constraints::SpacingConstraint(1.22, keycardSize)));
+                                                          Constraints::SpacingConstraint(p4, keycardSize)));
 
                             xx = Constraints::SpacingConstraint(0.5, keycardSize);
 
                         }
 
-                        if (it2 != ModuleManager::onlineDevs.end()) {
-                            FlarialGUI::image(R"(\Flarial\assets\flarial-dev.png)",
-                                D2D1::RectF(fakex + Constraints::SpacingConstraint(0.2, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(0.12, keycardSize),
-                                    fakex + Constraints::SpacingConstraint(1.1, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(1.22, keycardSize)));
-
-                            xx = Constraints::SpacingConstraint(0.5, keycardSize);
-
-                        }
-                        if (it3 != ModuleManager::onlineCommites.end()) {
-                            FlarialGUI::image(R"(\Flarial\assets\flarial-contribiutor.png)",
-                                D2D1::RectF(fakex + Constraints::SpacingConstraint(0.2, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(0.12, keycardSize),
-                                    fakex + Constraints::SpacingConstraint(1.1, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(1.22, keycardSize)));
-
-                            xx = Constraints::SpacingConstraint(0.5, keycardSize);
-
-                        }
-                        if (it4 != ModuleManager::onlinePluses.end()) {
-                            FlarialGUI::image(R"(\Flarial\assets\flarial-premium.png)",
-                                D2D1::RectF(fakex + Constraints::SpacingConstraint(0.2, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(0.12, keycardSize),
-                                    fakex + Constraints::SpacingConstraint(1.1, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(1.22, keycardSize)));
-
-                            xx = Constraints::SpacingConstraint(0.5, keycardSize);
-
-                        }
-                        if (it5 != ModuleManager::onlineStaff.end()) {
-                            FlarialGUI::image(R"(\Flarial\assets\flarial-staff.png)",
-                                D2D1::RectF(fakex + Constraints::SpacingConstraint(0.2, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(0.12, keycardSize),
-                                    fakex + Constraints::SpacingConstraint(1.1, keycardSize),
-                                    realcenter.y +
-                                    Constraints::SpacingConstraint(1.22, keycardSize)));
-
-                            xx = Constraints::SpacingConstraint(0.5, keycardSize);
-
-                        }
-
-                        */
 
                         FlarialGUI::FlarialTextWithFont(fakex + xx + Constraints::SpacingConstraint(0.5, keycardSize),
                                                         realcenter.y +
